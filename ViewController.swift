@@ -8,20 +8,46 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource  {
 
-    //an array of Country objects
+    //create an array of Country objects
     var fetchedCountries = [Country]()
     
+    @IBOutlet weak var countryTableView: UITableView!
     
     
+    override var prefersStatusBarHidden: Bool {
+        return true   //hide the status bar (personal preference)
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //set the data source as the table view itself(what I did in the mainstoryboard)
+        countryTableView.dataSource = self
+        
         parseData()
     }
 
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        
+        return fetchedCountries.count
+    }
+    
+    
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        let cell = countryTableView.dequeueReusableCell(withIdentifier: "cell")
+        cell?.textLabel?.text = fetchedCountries[indexPath.row].country
+        cell?.detailTextLabel?.text = fetchedCountries[indexPath.row].capital
+        
+        return cell!
+        
+            }
+
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -56,10 +82,15 @@ class ViewController: UIViewController {
                         
                         let country = eachCountry["name"] as! String
                         let capital = eachCountry["capital"] as! String
+                        
                         self.fetchedCountries.append(Country(country: country, capital: capital))
                     }
                     
-                    print(self.fetchedCountries) //for debugging purpose
+                   // print(self.fetchedCountries) //for debugging purpose
+                    
+                    
+                    //reload the table once the data are all fetched
+                    self.countryTableView.reloadData()
                 }
                 catch{
                     
