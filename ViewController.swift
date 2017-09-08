@@ -48,6 +48,7 @@ class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelega
         
             }
     
+    //the function that displays the search bar and sets up its appearance
     func searchBar(){
         let searchBar = UISearchBar(frame: CGRect(x:0, y: 0, width: self.view.frame.width, height: 50))
         searchBar.delegate = self  //our tableview is the delegate object of the search bar
@@ -60,10 +61,34 @@ class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelega
         
         self.countryTableView.tableHeaderView = searchBar
         
-         
         
     }
-
+    
+    //the function that handles the searching logic
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
+        
+        if searchText == "" {
+            
+            parseData() //If the user clears the search text, we parse the data again
+        } else{
+            
+            //search by country
+            if searchBar.selectedScopeButtonIndex == 0 {
+                
+                fetchedCountries = fetchedCountries.filter({(country)-> Bool in
+                return country.country.lowercased().contains((searchText.lowercased())) })
+            }
+            //search by capital
+            else {
+                fetchedCountries = fetchedCountries.filter({(country)-> Bool in
+                    return country.capital.lowercased().contains((searchText.lowercased())) })
+            }
+            
+        }
+        
+        countryTableView.reloadData()
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
