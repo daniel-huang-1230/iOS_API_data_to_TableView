@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource  {
+class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate  {
 
     //create an array of Country objects
     var fetchedCountries = [Country]()
@@ -27,6 +27,7 @@ class ViewController: UIViewController, UITableViewDataSource  {
         //set the data source as the table view itself(what I did in the mainstoryboard)
         countryTableView.dataSource = self
         
+        searchBar()
         parseData()
     }
 
@@ -46,6 +47,22 @@ class ViewController: UIViewController, UITableViewDataSource  {
         return cell!
         
             }
+    
+    func searchBar(){
+        let searchBar = UISearchBar(frame: CGRect(x:0, y: 0, width: self.view.frame.width, height: 50))
+        searchBar.delegate = self  //our tableview is the delegate object of the search bar
+        
+        searchBar.showsScopeBar = true
+        
+        searchBar.tintColor = UIColor.lightGray
+        
+        searchBar.scopeButtonTitles = ["Country","Capital" ]
+        
+        self.countryTableView.tableHeaderView = searchBar
+        
+         
+        
+    }
 
     
     override func didReceiveMemoryWarning() {
